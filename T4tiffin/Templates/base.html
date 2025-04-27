@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T4tiffin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <style>
+        /* Navbar styles */
+        .navbar {
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+        }
+
+        .navbar .navbar-brand img {
+            width: 50px;
+            height: auto;
+        }
+
+        .navbar .nav-link {
+            color: white !important;
+        }
+
+        /* Transparent Login/Logout Button */
+        .navbar .nav-link.login-btn {
+            background-color: rgba(255, 255, 255, 0.2); /* Transparent background */
+            color: white !important;
+            padding: 8px 16px;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .navbar .nav-link.login-btn:hover {
+            background-color: rgba(255, 255, 255, 0.4); /* Slightly opaque on hover */
+        }
+
+        .navbar-toggler-icon {
+            color: white !important; /* Make toggler icon visible */
+        }
+    </style>
+</head>
+<body>
+  {% load static %}
+  <nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+      <!-- Logo -->
+      <a class="navbar-brand" href="/">
+          <img src="{% static 'images/logo.jpeg' %}" alt="T4tiffin Logo">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <!-- Home Link -->
+          <li class="nav-item">
+            <a class="nav-link" href="/">Home</a>
+          </li>
+          <!-- About Link -->
+          <li class="nav-item">
+            <a class="nav-link" href="/about">About</a>
+          </li>
+          <!-- Contact Link -->
+          <li class="nav-item">
+            <a class="nav-link" href="/contact">Contact</a>
+          </li>
+        </ul>
+        <!-- Dynamic Login/Logout Button -->
+        <ul class="navbar-nav mb-2 mb-lg-0">
+          {% if request.session.username %}
+            <li class="nav-item">
+              <a class="nav-link login-btn" href="/logout">Logout</a>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link login-btn" href="/login">Login</a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  {% block content %}
+  {% endblock %}
+</body>
+</html>

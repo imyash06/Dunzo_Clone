@@ -1,0 +1,249 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - T4tiffin{% endblock %}
+
+{% load static %}
+
+{% block content %}
+<div class="container mt-3">
+    {% if messages %}
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<div class="container-fluid mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            {% if user_details %}
+            <div class="card futuristic-card shadow-xl mb-4">
+                <div class="card-header text-center bg-gradient">
+                    <h5 class="mb-0">Student Profile</h5>
+                </div>
+                <div class="card-body">
+                    <h6 class="fw-bold text-light">Student Name:</h6>
+                    <p class="fs-4 text-white">{{ user_details.student_name }}</p>
+                    <h6 class="fw-bold text-light">Age:</h6>
+                    <p class="fs-4 text-white">{{ user_details.age }} years</p>
+                    <h6 class="fw-bold text-light">Grade:</h6>
+                    <p class="fs-4 text-white">{{ user_details.grade }}</p>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Action Boxes -->
+            <div class="action-boxes">
+                <div class="row justify-content-center g-4">
+                    <div class="col-md-3 col-sm-6">
+                        <a href="/student_registration" class="box futuristic-box registration-box">
+                            <i class="fas fa-shopping-cart"></i> Registration
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <a href="/orders" class="box futuristic-box orders-box">
+                            <i class="fas fa-list-alt"></i> Orders
+                            {% if pending_orders_count > 0 %}
+                                <span class="order-count-badge">{{ pending_orders_count }}</span>
+                            {% endif %}
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <a href="/registered" class="box futuristic-box registered-box">
+                            <i class="fas fa-qrcode"></i> Registered
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <a href="/contact" class="box futuristic-box contact-box">
+                            <i class="fas fa-user-edit"></i> Contact
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mt-4 mt-md-0">
+                        <a href="/scanner" class="box futuristic-box scanner-box">
+                            <i class="fas fa-map-marker-alt"></i> Scanner
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mt-4 mt-md-0">
+                        <a href="/changepass" class="box futuristic-box changepass-box">
+                            <i class="fas fa-key"></i> Change Password
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Set the background image */
+    body {
+        background-image: url("{% static 'images/home.png' %}");
+        background-size: cover;
+        background-position: center center;
+        background-attachment: fixed;
+    }
+
+    /* Floating boxes for actions */
+    .box {
+        width: 100%;
+        height: 150px;
+        background-color: #fff;
+        color: #333;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 15px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        font-size: 18px;
+        font-weight: 600;
+        text-align: center;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .box:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        background-color: #007bff;
+        color: #fff;
+    }
+
+    .box i {
+        font-size: 30px;
+        margin-right: 10px;
+    }
+
+    /* Color of boxes */
+    .registration-box {
+        background-color: #5cb85c;
+    }
+
+    .orders-box {
+        background-color: #428bca;
+        position: relative;
+    }
+
+    .registered-box {
+        background-color: #f0ad4e;
+    }
+
+    .contact-box {
+        background-color: #6c757d;
+    }
+
+    .scanner-box {
+        background-color: #17a2b8;
+    }
+
+    .changepass-box {
+        background-color: #ffc107;
+    }
+
+    .passwordrequest-box {
+        background-color: #d9534f;
+    }
+
+    /* Red dot styling */
+    .order-count-badge {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        width: 20px;
+        height: 20px;
+        background-color: red;
+        color: white;
+        font-size: 12px;
+        font-weight: bold;
+        text-align: center;
+        border-radius: 50%;
+        line-height: 20px;
+    }
+
+    /* Card styling */
+    .card-header {
+        background-color: #007bff; /* Custom Blue */
+        border-bottom: 3px solid #0056b3; /* Darker border for the header */
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .transparent-bg {
+        background-color: transparent; /* Make the card body transparent */
+    }
+
+    .fw-bold {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .fs-4 {
+        font-size: 1.25rem;
+        color: #333;
+        line-height: 1.6;
+    }
+
+    .shadow-xl {
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .card {
+        border-radius: 15px;
+    }
+
+    /* Additional styling for spacing */
+    .mb-4 {
+        margin-bottom: 30px;
+    }
+
+    .mt-5 {
+        margin-top: 50px;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    /* Style for small message */
+    .small-message {
+        font-size: 0.9rem;
+    }
+
+    /* Hover effect for action boxes */
+    .box:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        background-color: #007bff;
+        color: #fff;
+    }
+
+    /* Spacing and alignment for action boxes */
+    .action-boxes .row {
+        margin-top: 20px;
+    }
+
+    .action-boxes .col-md-3 {
+        margin-bottom: 20px;
+    }
+</style>
+
+<script>
+    // Hide the message after 3 seconds
+    setTimeout(function() {
+        var messages = document.querySelectorAll('.alert');
+        messages.forEach(function(message) {
+            message.style.display = 'none';
+        });
+    }, 3000);
+</script>
+
+{% endblock %}

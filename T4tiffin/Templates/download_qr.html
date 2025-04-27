@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}Download QR - T4tiffin{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>QR Codes for {{ student.student_name }}</h2>
+    
+    <div class="row">
+        <div class="col-md-6 mb-4 text-center">
+            {% if permanent_qr %}
+                <img src="{{ permanent_qr.parmanantqr.url }}" alt="Permanent QR" class="img-fluid mb-2">
+                <p>Permanent QR</p>
+                <a href="{{ permanent_qr.parmanantqr.url }}" download class="btn btn-primary">Download Permanent QR</a>
+            {% else %}
+                <p>No permanent QR available.</p>
+            {% endif %}
+        </div>
+        
+        <div class="col-md-6 mb-4">
+            {% if multiple_qrs %}
+                <div class="d-flex flex-wrap">
+                    {% for qr in multiple_qrs %}
+                        <img src="{{ qr.multiple.url }}" alt="Multiple QR" class="img-fluid mb-2 mr-2" style="width: 150px;">
+                    {% endfor %}
+                </div>
+                <a href="{% url 'download_multiple_qrs' student.id %}" class="btn btn-primary mt-3">Download All Multiple QRs</a>
+            {% else %}
+                <p>No multiple QR available.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

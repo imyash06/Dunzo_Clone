@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<style>
+    /* Background image container */
+    .login-container {
+        background-image: url("{% static 'images/loginpage.jpeg' %}");
+        background-size: cover; /* Ensure the image covers the screen */
+        background-position: center; /* Center the image */
+        background-attachment: fixed; /* Ensure the background stays in place */
+        min-height: 100vh; /* Full screen height */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-top: 100px; /* Adjust to avoid navbar overlap */
+        overflow: hidden; /* Prevent image overflow */
+    }
+
+    /* Navbar custom styles to ensure it is on top */
+    nav.navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000; /* Keep navbar on top */
+    }
+
+    /* Login box styling */
+    .login-box {
+        width: 100%;
+        max-width: 400px;
+        padding: 40px;
+        border-radius: 10px;
+        background-color: rgba(255, 255, 255, 0.8); /* Slight opacity for better readability */
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        z-index: 2000; /* Ensure login box is above the background */
+    }
+
+    /* Style for small message */
+    .small-message {
+        font-size: 0.9rem;
+    }
+
+    /* Forgot Password Link */
+    .forgot-password {
+        font-size: 0.9rem;
+        color: #007bff;
+        text-decoration: none;
+        margin-top: 10px;
+        display: block;
+        text-align: center;
+    }
+
+    .forgot-password:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<div class="login-container">
+    <div class="login-box">
+        <div class="text-center">
+            <h2 class="text-primary font-weight-bold">T4tiffin</h2>
+            <p class="text-muted">Login to your account</p>
+            <hr>
+        </div>
+
+        {% if error %}
+        <div class="alert alert-danger text-center small-message" role="alert">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} text-center small-message" role="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <!-- Login Form -->
+        <form action="/login/" method="POST">
+            {% csrf_token %}
+            
+            <!-- Username -->
+            <div class="form-group">
+                <label for="username" class="font-weight-bold">Username</label>
+                <input type="text" 
+                       name="username" 
+                       id="username" 
+                       class="form-control form-control-lg" 
+                       placeholder="Enter your username" 
+                       required>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+                <label for="password" class="font-weight-bold">Password</label>
+                <input type="password" 
+                       name="password" 
+                       id="password" 
+                       class="form-control form-control-lg" 
+                       placeholder="Enter your password" 
+                       required>
+            </div>
+
+            <!-- Login Button -->
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-info btn-lg btn-block">
+                    Login
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Hide the message after 3 seconds
+    setTimeout(function() {
+        var messages = document.querySelectorAll('.small-message');
+        messages.forEach(function(message) {
+            message.style.display = 'none';
+        });
+    }, 3000);
+</script>
+
+{% endblock %}

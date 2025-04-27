@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact - T4tiffin{% endblock %}
+
+{% load static %}
+
+{% block content %}
+<!-- Contact Page Section -->
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        
+        <!-- Left Side: Contact Info -->
+        <div class="col-md-6 text-center mb-4 mb-md-0 bg-white text-black" style="opacity: 0.7;">
+            <h2 class="text-primary mb-4" style="font-size: 3rem;">Contact Us</h2>
+            <div class="contact-info" style="font-size: 1.5rem;">
+                <p><strong><i class="bi bi-house-door"></i> Address:</strong> 123 T4tiffin Street, City, Country</p>
+                <p><strong><i class="bi bi-phone"></i> Phone:</strong> +123 456 789</p>
+                <p><strong><i class="bi bi-envelope"></i> Email:</strong> contact@t4tiffin.com</p>
+            </div>
+        </div>
+        
+
+        {% comment %} <!-- Right Side: Contact Form -->
+        <div class="col-md-6">
+            <h3 class="text-primary mb-4">Send us a Message</h3>
+            <form action="/send-message" method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="name" class="form-label">Your Name</label>
+                    <input type="text" class="form-control" id="name" name="name" required>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Your Email</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="message" class="form-label">Message</label>
+                    <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Send Message</button>
+            </form>
+        </div> {% endcomment %}
+
+    </div>
+</div>
+
+<style>
+    /* Set the background image */
+    body {
+        background-image: url("{% static 'images/contact1.jpg' %}");
+        background-size: cover;
+        background-position: center center;
+        background-attachment: fixed;
+    }
+</style>
+
+<!-- Custom Section with Background -->
+<section class="bg-white text-black p-4 mt-4" style="opacity: 0.7;">
+    <div class="container text-center">
+        <h3 class="display-4 mb-4">Need Help?</h3>
+        <p>Our team is always here to assist you with any questions or concerns. Feel free to get in touch!</p>
+    </div>
+</section>
+
+{% endblock %}

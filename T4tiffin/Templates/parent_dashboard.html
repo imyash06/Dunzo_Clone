@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+
+{% block title %}Parent Dashboard - T4tiffin{% endblock %}
+
+{% load static %}
+
+{% block content %}
+<div class="container-fluid mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} text-center" role="alert" id="alert-{{ forloop.counter }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            {% if user_details %}
+            <div class="card shadow-xl rounded mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Student Profile</h5>
+                </div>
+                <div class="card-body transparent-bg">
+                    <h6 class="fw-bold">Student Name:</h6>
+                    <p class="fs-4">{{ user_details.student_name }}</p>
+                    <h6 class="fw-bold">Age:</h6>
+                    <p class="fs-4">{{ user_details.age }} years</p>
+                    <h6 class="fw-bold">Grade:</h6>
+                    <p class="fs-4">{{ user_details.grade }}</p>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Action Boxes (3 Boxes) -->
+            <div class="floating-boxes mt-5">
+                <a href="/place_order" class="box order-box">
+                    <i class="fas fa-shopping-cart"></i> Place Order
+                </a>
+
+                <a href="/view_orders" class="box orders-box">
+                    <i class="fas fa-list-alt"></i> My Orders
+                </a>
+
+                <a href="/profile" class="box manage-box">
+                    <i class="fas fa-user-cog"></i> Profile
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Set the background image */
+    body {
+        background-image: url("{% static 'images/parentpage.png' %}");
+        background-size: cover;
+        background-position: center center;
+        background-attachment: fixed;
+        color: #333;
+    }
+
+    .card-header {
+        background-color: #007bff; /* Custom Blue */
+        border-bottom: 3px solid #0056b3; /* Darker border for the header */
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .transparent-bg {
+        background-color: transparent; /* Make the card body transparent */
+    }
+
+    .fw-bold {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .fs-4 {
+        font-size: 1.25rem;
+        line-height: 1.6;
+    }
+
+    .shadow-xl {
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .card {
+        border-radius: 15px;
+    }
+
+    /* Floating boxes for actions */
+    .floating-boxes {
+        display: flex;
+        justify-content: space-between;
+        gap: 30px;
+        padding: 40px;
+        margin-top: 30px; /* Added top margin here */
+    }
+
+    .box {
+        width: 250px;
+        height: 150px;
+        background-color: #fff;
+        color: #333;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 15px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        font-size: 18px;
+        font-weight: 600;
+        text-align: center;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .box:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        background-color: #007bff;
+        color: #fff;
+    }
+
+    .box i {
+        font-size: 30px;
+        margin-right: 10px;
+    }
+
+    .order-box {
+        background-color: #5cb85c;
+    }
+
+    .orders-box {
+        background-color: #428bca;
+    }
+
+    .manage-box {
+        background-color: #f0ad4e;
+    }
+
+    /* Additional styling for spacing */
+    .mb-4 {
+        margin-bottom: 30px;
+    }
+
+    .mt-5 {
+        margin-top: 50px;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+</style>
+
+<script>
+    // Hide messages after 3 seconds
+    setTimeout(function() {
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => {
+            alert.style.display = 'none';
+        });
+    }, 3000); // 3000 milliseconds = 3 seconds
+</script>
+
+{% endblock %}

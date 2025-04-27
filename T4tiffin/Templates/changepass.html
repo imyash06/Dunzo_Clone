@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+
+{% block title %}Change Password - T4tiffin{% endblock %}
+
+{% load static %}
+
+{% block content %}
+    <div class="container mt-4">
+
+        <div class="p-5 m-4 shadow-lg rounded">
+
+            <!-- Forgot Password Section -->
+            <div class="col-lg-6 mx-auto border pt-4 rounded bg-light p-5">
+                <div class="text-center">
+                    <h5 class="display-6 text-primary">Change Password</h5>
+                    <hr class="w-50 mx-auto">
+                </div>
+
+                <!-- Display Success or Error Messages -->
+                {% if messages %}
+                    <div id="message-container">
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} text-center" role="alert">
+                            {{ message }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <form action="/changepass" method="POST" id="changePasswordForm">
+                    {% csrf_token %}
+
+                    <!-- Username -->
+                    <div class="form-group">
+                        <label for="username" class="font-weight-bold">Username</label>
+                        <input type="text" name="username" id="username" class="form-control form-control-lg" placeholder="Enter username" required>
+                    </div>
+
+                    <!-- Previous password -->
+                    <div class="form-group">
+                        <label for="previous_password" class="font-weight-bold">Previous Password</label>
+                        <input type="password" name="previous_password" id="previous_password" class="form-control form-control-lg" placeholder="Enter previous password" required>
+                    </div>
+
+                    <!-- New password -->
+                    <div class="form-group">
+                        <label for="new_password" class="font-weight-bold">New Password</label>
+                        <input type="password" name="new_password" id="new_password" class="form-control form-control-lg" placeholder="Enter new password" required>
+                        <small class="text-danger" id="newPasswordError"></small>
+                    </div>
+
+                    <!-- Confirm password -->
+                    <div class="form-group">
+                        <label for="conform_password" class="font-weight-bold">Confirm Password</label>
+                        <input type="password" name="conform_password" id="conform_password" class="form-control form-control-lg" placeholder="Enter confirm password" required>
+                        <small class="text-danger" id="confirmPasswordError"></small>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="form-group text-center">
+                        <input class="btn btn-info btn-lg px-5 py-3" type="submit" value="Submit">
+                    </div>
+                    
+                    <!-- Go to Home Button -->
+                    <div class="text-center mt-4">
+                        <a href="/home" class="btn btn-primary btn-lg">Go to Dashboard</a>
+                    </div>     
+                </form>
+            </div>
+            
+        </div>
+    </div>
+
+    <style>
+        /* Set the background image */
+        body {
+            background-image: url("{% static 'images/change_pass.jpg' %}");
+            background-size: cover;
+            background-position: center center;
+            background-attachment: fixed;
+        }
+    </style>
+
+    <script>
+        document.getElementById('changePasswordForm').addEventListener('submit', function(event) {
+            let isValid = true;
+
+            // Field values
+            const newPassword = document.getElementById('new_password').value;
+            const confirmPassword = document.getElementById('conform_password').value;
+
+            // Regular expression for strong passwords
+            const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+            // Clear previous errors
+            document.getElementById('newPasswordError').textContent = '';
+            document.getElementById('confirmPasswordError').textContent = '';
+
+            // Validate new password
+            if (!passwordRegex.test(newPassword)) {
+                document.getElementById('newPasswordError').textContent = 'Password must be at least 8 characters, contain 1 uppercase letter, 1 number, and 1 special character.';
+                isValid = false;
+            }
+
+            // Validate confirm password
+            if (newPassword !== confirmPassword) {
+                document.getElementById('confirmPasswordError').textContent = 'Passwords do not match.';
+                isValid = false;
+            }
+
+            if (!isValid) {
+                event.preventDefault();
+            }
+        });
+
+        // Hide messages after 3 seconds
+        setTimeout(function() {
+            const messageContainer = document.getElementById('message-container');
+            if (messageContainer) {
+                messageContainer.style.display = 'none';
+            }
+        }, 3000);
+    </script>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h3 class="text-primary">Order Management</h3>
+
+    {% if orders %}
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="text-success">Orders for Your School</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group">
+                    {% for order in orders %}
+                        <li class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <p><strong>Student:</strong> {{ order.username.student_name }}</p>
+                                    <p><strong>Order ID:</strong> {{ order.id }}</p>
+                                    <p><strong>Address:</strong> {{ order.address }}</p>
+                                    <p><strong>Additional Notes:</strong> {{ order.additional_note }}</p>
+                                    <p><strong>Status:</strong> {{ order.get_order_status_display }}</p>
+                                    <p><strong>Created At:</strong> {{ order.created_at|date:"d M Y H:i" }}</p>
+                                </div>
+                               
+                            </div>
+                            <hr>
+                            <form action="{% url 'update_order_status' order.id %}" method="POST" class="mt-2">
+                                {% csrf_token %}
+                                <label for="order_status_{{ order.id }}">Update Status:</label>
+                                <select name="order_status" id="order_status_{{ order.id }}" class="form-control" onchange="this.form.submit()">
+                                    {% for status, status_label in order.STATUS_CHOICES %}
+                                        <option value="{{ status }}" {% if order.order_status == status %}selected{% endif %}>
+                                            {{ status_label }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+
+                                  
+                            </form>
+                        </li>
+                    {% endfor %}
+                    
+                </ul>
+                
+            </div>
+                       
+        </div>
+       
+    {% else %}
+        <p class="alert alert-warning mt-4">No orders found for your school.</p>
+    {% endif %}
+    <!-- Go to Home Button -->
+    <div class="text-center mt-4">
+        <a href="/home" class="btn btn-primary btn-lg">Go to Dashboard</a>
+    </div>
+</div>
+
+<style>
+    /* Set the background image */
+    body {
+        background-image: url("{% static 'images/order.jpg' %}");
+        background-size: cover;
+        background-position: center center;
+        background-attachment: fixed;
+    }
+</style>
+
+{% endblock %}

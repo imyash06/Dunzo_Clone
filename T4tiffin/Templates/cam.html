@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Scanner</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+    
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #2193b0, #6dd5ed);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            color: #fff;
+        }
+    
+        h1 {
+            color: #ffffff;
+            margin-bottom: 20px;
+            font-size: 36px;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            text-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+            font-weight: 600;
+        }
+
+        .main-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            width: 90%;
+            max-width: 1200px;
+        }
+
+        .left-column {
+            width: 50%;
+            padding-right: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .right-column {
+            width: 50%;
+            padding-left: 20px;
+        }
+
+        #video-preview, #video-preview2 {
+            width: 100%;
+            max-width: 500px;
+            border-radius: 20px;
+            border: 4px solid #fff;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            transition: transform 0.3s ease-in-out;
+        }
+    
+        #video-preview:hover, #video-preview2:hover {
+            transform: scale(1.05);
+        }
+
+        input[type="text"] {
+            width: 90%;
+            max-width: 500px;
+            padding: 12px;
+            margin: 10px 0;
+            border: 2px solid #fff;
+            border-radius: 10px;
+            font-size: 16px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            font-weight: 400;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        input[type="text"]:focus {
+            background-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+            outline: none;
+        }
+
+        input[type="text"]:read-only {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 2px dashed #fff;
+            font-style: italic;
+        }
+
+        #timer {
+            font-size: 20px;
+            color: #ffeb3b;
+            margin-top: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+            font-weight: 600;
+        }
+
+        #error-message {
+            color: #ff5252;
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: 500;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+        }
+
+        #student-details {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 15px;
+            border: 1px solid #fff;
+            width: 100%;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            color: #fff;
+            font-weight: 400;
+        }
+
+        #student-details p {
+            margin: 8px 0;
+            font-size: 18px;
+            line-height: 1.6;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .loading {
+            text-align: center;
+            font-size: 20px;
+            color: #4caf50;
+            font-weight: bold;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 30px;
+            background-color: #ff9800;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        button:hover {
+            background-color: #ff5722;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>QR Code Scanner</h1>
+    </div>
+
+    <div class="main-container">
+        <div class="left-column">
+            <input type="text" id="input-field-1" placeholder="Scan first QR code" readonly />
+            <input type="text" id="input-field-2" class="hidden" placeholder="Scan second QR code" readonly />
+
+            <video id="video-preview" autoplay></video>
+            <video id="video-preview2" class="hidden" autoplay></video>
+
+            <div id="timer"></div>
+            <div id="error-message"></div>
+        </div>
+
+        <div class="right-column">
+            <div id="student-details"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
+
+    <script>
+        let videoElement1 = document.getElementById('video-preview');
+        let videoElement2 = document.getElementById('video-preview2');
+        let inputField1 = document.getElementById('input-field-1');
+        let inputField2 = document.getElementById('input-field-2');
+        let timerDiv = document.getElementById('timer');
+        let studentDetailsDiv = document.getElementById('student-details');
+        let errorMessage = document.getElementById('error-message');
+        let canvasElement = document.createElement('canvas');
+        let canvasContext = canvasElement.getContext('2d');
+
+        let firstQRCodeData = '';
+        let secondQRCodeData = '';
+        let timerRunning = false;
+        let timerValue = 60;
+        let countdownInterval;
+
+        function startScanner1() {
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+                    .then(function (stream) {
+                        videoElement1.srcObject = stream;
+                        requestAnimationFrame(scanQRCode1);
+                    })
+                    .catch(function (err) {
+                        errorMessage.textContent = "Error: Camera access denied or not available.";
+                        console.error("Camera access error: ", err);
+                    });
+            } else {
+                errorMessage.textContent = "Error: Your browser does not support camera access.";
+                console.error("Browser does not support getUserMedia.");
+            }
+        }
+
+        function scanQRCode1() {
+            if (videoElement1.readyState === videoElement1.HAVE_ENOUGH_DATA) {
+                canvasElement.width = videoElement1.videoWidth;
+                canvasElement.height = videoElement1.videoHeight;
+                canvasContext.drawImage(videoElement1, 0, 0, canvasElement.width, canvasElement.height);
+
+                let imageData = canvasContext.getImageData(0, 0, canvasElement.width, canvasElement.height);
+                let qrCode = jsQR(imageData.data, imageData.width, imageData.height);
+
+                if (qrCode) {
+                    const qrData = qrCode.data;
+                    console.log("Scanned First QR Code: ", qrData);
+
+                    if (!firstQRCodeData) {
+                        firstQRCodeData = qrData;
+                        inputField1.value = firstQRCodeData;
+                        startTimer(); // Start the timer when first QR is scanned
+                        videoElement1.classList.add('hidden'); // Hide the first video element
+                        videoElement2.classList.remove('hidden'); // Show the second video element
+                        inputField2.classList.remove('hidden'); // Show the second input field
+                        setTimeout(() => { // Delay the second scanner by 2 seconds
+                            startScanner2(); // Start scanning for the second QR code after 2 seconds
+                        }, 2000); // 2000 milliseconds = 2 seconds
+                    }
+                }
+            }
+            requestAnimationFrame(scanQRCode1);
+        }
+
+        function startScanner2() {
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+                    .then(function (stream) {
+                        videoElement2.srcObject = stream;
+                        requestAnimationFrame(scanQRCode2);
+                    })
+                    .catch(function (err) {
+                        errorMessage.textContent = "Error: Camera access denied or not available.";
+                        console.error("Camera access error: ", err);
+                    });
+            } else {
+                errorMessage.textContent = "Error: Your browser does not support camera access.";
+                console.error("Browser does not support getUserMedia.");
+            }
+        }
+
+        function scanQRCode2() {
+            if (videoElement2.readyState === videoElement2.HAVE_ENOUGH_DATA) {
+                canvasElement.width = videoElement2.videoWidth;
+                canvasElement.height = videoElement2.videoHeight;
+                canvasContext.drawImage(videoElement2, 0, 0, canvasElement.width, canvasElement.height);
+
+                let imageData = canvasContext.getImageData(0, 0, canvasElement.width, canvasElement.height);
+                let qrCode = jsQR(imageData.data, imageData.width, imageData.height);
+
+                if (qrCode) {
+                    const qrData = qrCode.data;
+                    console.log("Scanned Second QR Code: ", qrData);
+
+                    if (!secondQRCodeData) {
+                        secondQRCodeData = qrData;
+                        inputField2.value = secondQRCodeData;
+                        verifyData();
+                    }
+                }
+            }
+            requestAnimationFrame(scanQRCode2);
+        }
+
+        function startTimer() {
+            if (!timerRunning) {
+                   countdownInterval = setInterval(() => {
+            if (timerValue <= 0) {
+                clearInterval(countdownInterval);
+                timerDiv.textContent = "Time's up! Please scan the second QR code.";
+                stopCamera(); // Stop the camera when time's up
+            } else {
+                timerDiv.textContent = `Time remaining: ${timerValue} seconds`;
+                timerValue--;
+            }
+            }, 1000);
+            timerRunning = true;
+    }
+}
+
+        function verifyData() {
+            console.log("First QR Code Data:", firstQRCodeData);
+            console.log("Second QR Code Data:", secondQRCodeData);
+
+            if (firstQRCodeData && secondQRCodeData) {
+                studentDetailsDiv.innerHTML = '<div class="loading">Verifying QR Codes...</div>';
+
+                fetch('/get_student_details', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({
+                        encrypt1: firstQRCodeData,
+                        encrypt2: secondQRCodeData
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        stopCamera();
+                        clearInterval(countdownInterval);
+                        studentDetailsDiv.innerHTML = `
+                            <p><strong>Student Name:</strong> ${data.student_name}</p>
+                            <p><strong>Parent Name:</strong> ${data.parent_name}</p>
+                            <p><strong>Parent Phone:</strong> ${data.parent_phone}</p>
+                            <p><strong>Standard:</strong> ${data.standard}</p>
+                            <p><strong>Division:</strong> ${data.division}</p>
+                            <p><strong>Address:</strong> ${data.address}</p>
+                        `;
+                    } else {
+                        studentDetailsDiv.innerHTML = `<p>${data.message}</p>`;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching student details:', error);
+                    studentDetailsDiv.innerHTML = `<p>Error fetching details.</p>`;
+                });
+            }
+        }
+
+        function stopCamera() {
+            const streams = [videoElement1.srcObject, videoElement2.srcObject];
+            streams.forEach(stream => {
+                if (stream && stream.getTracks) {
+                    stream.getTracks().forEach(track => track.stop());
+                }
+            });
+        }
+
+        window.onload = function () {
+            startScanner1();
+        };
+
+    </script>
+    <!-- Go to Home Button -->
+    <div class="text-center mt-4">
+        <a href="/home" class="btn btn-primary btn-lg">Go to Dashboard</a>
+    </div>
+</body>
+</html>

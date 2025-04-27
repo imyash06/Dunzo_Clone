@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}QR Codes - {{ student.student_name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h3 class="text-center text-uppercase text-primary mb-4">QR Codes for {{ student.student_name }}</h3>
+
+    {% if qrcodes %}
+        <!-- Permanent QR Code Section - Centered at the Top -->
+        <div class="row justify-content-center">
+            {% for qr in qrcodes %}
+                {% if forloop.first %}
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="card shadow-lg border-light">
+                            <img src="{{ qr.parmanantqr.url }}" class="card-img-top img-fluid rounded" alt="Permanent QR Code">
+                            <div class="card-body text-center">
+                                <h5 class="card-title text-primary">Main QR Code</h5>
+                                <p class="card-text text-muted">{{ student.student_name }} - QR</p>
+                                <a href="{% url 'download_permanent_qr' qr.id %}" class="btn btn-primary w-100">Download QR Code</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <!-- Multiple QR Codes Section (No limit, all QR codes will be shown) -->
+        <div class="row mt-4">
+            {% for qr in qrcodes %}
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                    <div class="card shadow-lg border-light">
+                        <img src="{{ qr.multiple.url }}" class="card-img-top img-fluid rounded" alt="Multiple QR Code">
+                        <div class="card-body text-center">
+                            <h5 class="card-title text-success">QR Code {{ forloop.counter }}</h5>
+                            <p class="card-text text-muted">{{ student.student_name }} - QR {{ forloop.counter }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Download All Multiple QR Codes Button -->
+        <div class="text-center mt-4">
+            <a href="{% url 'download_multiple_qrs' student.id %}" class="btn btn-success btn-lg px-5">Download All Multiple QR Codes</a>
+        </div>
+
+    {% else %}
+        <!-- No QR Codes Message -->
+        <div class="alert alert-warning text-center">
+            No QR codes found for this student.
+        </div>
+    {% endif %}
+    <!-- Go to Home Button -->
+    <div class="text-center mt-4">
+        <a href="/home" class="btn btn-primary btn-lg">Go to Dashboard</a>
+    </div>
+</div>
+{% endblock %}

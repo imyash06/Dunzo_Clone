@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %}Forgot Password - T4tiffin{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+
+        <div class="p-5 m-4 shadow-lg rounded">
+
+            <!-- Forgot Password Section -->
+            <div class="col-lg-6 mx-auto border pt-4 rounded bg-light p-5">
+                <div class="text-center">
+                    <h5 class="display-6 text-primary">Forgot Password</h5>
+                    <hr class="w-50 mx-auto">
+                </div>
+
+                <!-- Display Success or Error Messages -->
+                {% if messages %}
+                    <div id="message-container">
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} text-center" role="alert">
+                            {{ message }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <form action="/forgotpass" method="POST">
+                    {% csrf_token %}
+
+                    <!-- Student Name -->
+                    <div class="form-group">
+                        <label for="student_name" class="font-weight-bold">Student Name</label>
+                        <input type="text" name="student_name" id="student_name" class="form-control form-control-lg" placeholder="Enter student name" required>
+                    </div>
+
+                    <!-- Mobile Number -->
+                    <div class="form-group">
+                        <label for="mobile_no" class="font-weight-bold">Mobile Number</label>
+                        <input type="text" name="mobile_no" id="mobile_no" class="form-control form-control-lg" placeholder="Enter your mobile number" required>
+                    </div>
+
+                    <!-- Standard -->
+                    <div class="form-group">
+                        <label for="standard" class="font-weight-bold">Standard</label>
+                        <input type="text" name="standard" id="standard" class="form-control form-control-lg" placeholder="Enter standard" required>
+                    </div>
+
+                    <!-- Division -->
+                    <div class="form-group">
+                        <label for="division" class="font-weight-bold">Division</label>
+                        <input type="text" name="division" id="division" class="form-control form-control-lg" placeholder="Enter division" required>
+                    </div>
+
+                    <!-- Roll No -->
+                    <div class="form-group">
+                        <label for="roll_no" class="font-weight-bold">Roll Number</label>
+                        <input type="text" name="roll_no" id="roll_no" class="form-control form-control-lg" placeholder="Enter roll number" required>
+                    </div>
+
+                    <hr>
+
+                    <!-- Submit Button -->
+                    <div class="form-group text-center">
+                        <input class="btn btn-info btn-lg px-5 py-3" type="submit" value="Submit">
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Automatically hide messages after 3 seconds
+        setTimeout(() => {
+            const messageContainer = document.getElementById('message-container');
+            if (messageContainer) {
+                messageContainer.style.display = 'none';
+            }
+        }, 3000); // 3000 ms = 3 seconds
+    </script>
+{% endblock %}

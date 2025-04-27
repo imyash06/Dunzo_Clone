@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}My QR Code{% endblock %}
+
+{% block content %}
+<div class="container mt-5 text-center">
+    <div class="card shadow-lg mx-auto" style="max-width: 400px; border-radius: 15px;">
+        <div class="card-header bg-gray text-white py-3" style="background-color: #6c757d;">
+            <h2 class="mb-0">My QR Code</h2>
+        </div>
+        <div class="card-body py-5">
+            {% if student %}
+                <div class="mb-4">
+                    <img src="{{ student.qr_code.url }}" alt="QR Code" class="img-fluid rounded" style="border: 2px solid #6c757d; padding: 10px;">
+                </div>
+                <p class="text-muted">Scan this QR code for quick access to your profile or services.</p>
+
+                <!-- Download Button -->
+                <a href="{{ student.qr_code.url }}" class="btn btn-primary mt-4" download="QR_Code_{{ student.name }}.png">
+                    Download QR Code
+                </a>
+            {% else %}
+                <p class="text-danger fs-5">No QR code available. Please contact your school for assistance.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border: none;
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-header {
+        font-family: 'Roboto', sans-serif;
+        text-transform: uppercase;
+        font-weight: bold;
+        color: #fff;
+    }
+
+    .card-body {
+        background-color: #f8f9fa;
+        border-radius: 0 0 15px 15px;
+    }
+
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .text-muted {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 1rem;
+        border-radius: 25px;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+</style>
+{% endblock %}

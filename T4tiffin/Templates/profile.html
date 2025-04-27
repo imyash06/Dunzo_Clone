@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block title %}Student Profile - T4tiffin{% endblock %}
+
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    {% if student %}
+        <div class="card shadow-lg rounded-lg">
+            <div class="card-header text-center bg-gradient text-black">
+                <h3 class="mb-0">Student Profile</h3>
+            </div>
+            <div class="card-body profile-card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="fw-bold">Student Name:</h6>
+                        <p class="fs-5">{{ student.student_name }}</p>
+
+                        <h6 class="fw-bold">Parent Name:</h6>
+                        <p class="fs-5">{{ student.parent_name }}</p>
+
+                        <h6 class="fw-bold">Standard:</h6>
+                        <p class="fs-5">{{ student.standard }}</p>
+
+                        <h6 class="fw-bold">Division:</h6>
+                        <p class="fs-5">{{ student.division }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="fw-bold">Roll No:</h6>
+                        <p class="fs-5">{{ student.roll_no }}</p>
+
+                        <h6 class="fw-bold">Parent Phone:</h6>
+                        <p class="fs-5">{{ student.parent_phone }}</p>
+
+                        <h6 class="fw-bold">Address:</h6>
+                        <p class="fs-5">{{ student.address }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-danger text-center">
+            <h5 class="mb-0">No Student Data Found</h5>
+            <p>Please log in to view the profile.</p>
+            <a href="/login" class="btn btn-primary btn-sm">Go to Login</a>
+        </div>
+    {% endif %}
+    <!-- Back to Home Button -->
+    <div class="text-center mt-3">
+        <a href="{% url 'parent_dashboard' %}" class="btn btn-secondary btn-lg">Back to Dashboard</a>
+    </div>
+</div>
+
+<style>
+    
+    body {
+        background-image: url("{% static 'images/contact2.jpg' %}");
+        background-size: cover;
+        background-position: center center;
+        background-attachment: fixed;
+    }
+    
+    .card {
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-header {
+        background: linear-gradient(90deg, #007bff, #0056b3);
+        padding: 20px;
+    }
+
+    .card-footer {
+        background: linear-gradient(90deg, #f8f9fa, #e9ecef);
+    }
+
+    .fw-bold {
+        font-weight: 700;
+        color: #333;
+    }
+
+    .fs-5 {
+        font-size: 1.2rem;
+        color: #555;
+        line-height: 1.6;
+    }
+
+    .profile-card-body {
+        padding: 20px 30px;
+    }
+
+    .btn-lg {
+        font-size: 1.2rem;
+        padding: 10px 20px;
+    }
+
+    .bg-gradient {
+        background: linear-gradient(90deg, #007bff, #0056b3);
+    }
+
+    .bg-gradient-light {
+        background: linear-gradient(90deg, #f8f9fa, #e9ecef);
+    }
+</style>
+
+<script>
+    // Add interactivity or animations here if required
+</script>
+
+{% endblock %}

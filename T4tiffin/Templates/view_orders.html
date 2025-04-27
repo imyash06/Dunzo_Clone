@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Your Orders - T4tiffin{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4 text-primary fw-bold">Your Orders</h2>
+
+    <!-- Display Success or Error Messages -->
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} text-center" role="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Orders Table -->
+    {% if orders %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover shadow-lg rounded">
+                <thead class="table-primary">
+                    <tr>
+                        <th class="text-center">Order ID</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center">Address</th>
+                        <th class="text-center">Additional Notes</th>
+                        <th class="text-center">Created At</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                        <tr>
+                            <td class="text-center">{{ order.id }}</td>
+                            <td class="text-center">
+                                <span class="badge 
+                                    {% if order.order_status|lower == 'delivered' %}bg-success
+                                    {% elif order.order_status|lower == 'pending' %}bg-warning
+                                    {% elif order.order_status|lower == 'cancelled' %}bg-danger
+                                    {% elif order.order_status|lower == 'confirm' %}bg-info
+                                    {% else %}bg-secondary{% endif %}">
+                                    {{ order.order_status }}
+                                </span>
+                            </td>
+                            <td>{{ order.address }}</td>
+                            <td>{{ order.additional_note|default:"N/A" }}</td>
+                            <td class="text-center">{{ order.created_at }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="alert alert-info text-center">
+            <p class="fs-5">You have no orders placed yet. Start by placing your first order!</p>
+        </div>
+    {% endif %}
+    <!-- Back to Home Button -->
+    <div class="text-center mt-3">
+        <a href="{% url 'parent_dashboard' %}" class="btn btn-secondary btn-lg">Back to Dashboard</a>
+    </div>
+</div>
+
+<style>
+
+    /* Set the background image */
+    body {
+        background-image: url("{% static 'images/order.jpg' %}");
+        background-size: cover;
+        background-position: center center;
+        background-attachment: fixed;
+    }
+    /* Table Styling */
+    .table {
+        border-collapse: separate;
+        border-spacing: 0;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #f8f9fa;
+        cursor: pointer;
+    }
+
+    .badge {
+        font-size: 0.9rem;
+        padding: 5px 10px;
+        text-transform: uppercase;
+    }
+
+    /* Status Badge Colors */
+    .bg-success {
+        background-color: #28a745 !important;
+    }
+
+    .bg-warning {
+        background-color: #ffc107 !important;
+    }
+
+    .bg-danger {
+        background-color: #dc3545 !important;
+    }
+
+    .bg-info {
+        background-color: #17a2b8 !important;
+    }
+
+    .bg-secondary {
+        background-color: #6c757d !important;
+    }
+
+    /* Headings and Text */
+    .text-primary {
+        font-family: 'Roboto', sans-serif;
+        letter-spacing: 1px;
+    }
+
+    /* General Container Styling */
+    .container {
+        font-family: 'Roboto', sans-serif;
+    }
+
+    .table-primary {
+        background-color: #007bff;
+        color: #fff;
+    }
+
+    /* Shadows for Table */
+    .shadow-lg {
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    }
+</style>
+{% endblock %}

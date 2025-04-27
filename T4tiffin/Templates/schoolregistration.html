@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+
+{% block title %}School Register - T4tiffin{% endblock %}
+
+{% load static %}
+
+{% block content %}
+    <div class="container mt-4">
+
+        <div class="p-5 m-4 shadow-lg rounded">
+
+            <!-- School Registration Section -->
+            <div class="col-lg-6 mx-auto border pt-4 rounded bg-light p-5">
+                <div class="text-center">
+                    <h5 class="display-6 text-primary">School Register</h5>
+                    <hr class="w-50 mx-auto">
+                </div>
+
+                <!-- Display Success or Error Messages -->
+                {% if messages %}
+                    <div id="message-container">
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} text-center" role="alert">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <form action="/schoolregistration" method="POST" id="schoolRegistrationForm">
+                    {% csrf_token %}
+
+                    <!-- School Name -->
+                    <div class="form-group">
+                        <label for="school_name" class="font-weight-bold">School Name</label>
+                        <input type="text" name="school_name" id="school_name" class="form-control form-control-lg" placeholder="Enter school name" required>
+                        <small class="text-danger" id="schoolNameError"></small>
+                    </div>
+
+                    <!-- Username -->
+                    <div class="form-group">
+                        <label for="username" class="font-weight-bold">Username</label>
+                        <input type="text" name="username" id="username" class="form-control form-control-lg" placeholder="Enter username" required>
+                    </div>
+
+                    <!-- school Id -->
+                    <div class="form-group">
+                        <label for="school_id" class="font-weight-bold">School ID</label>
+                        <input type="text" name="school_id" id="school_id" class="form-control form-control-lg" placeholder="Enter school ID" required>
+                        <small class="text-danger" id="schoolIdError"></small>
+                    </div>
+
+                    <!-- Email Id -->
+                    <div class="form-group">
+                        <label for="Email" class="font-weight-bold">Email ID</label>
+                        <input type="text" name="Email" id="Email" class="form-control form-control-lg" placeholder="Enter Email ID" required>
+                    </div>
+
+                    <!-- Contact -->
+                    <div class="form-group">
+                        <label for="contact" class="font-weight-bold">Contact</label>
+                        <input type="text" name="contact" id="Address" class="form-control form-control-lg" placeholder="Enter School contact" required>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="form-group">
+                        <label for="password" class="font-weight-bold">Password</label>
+                        <input type="password" name="password" id="password" class="form-control form-control-lg" placeholder="********" required>
+                        <small class="text-danger" id="passwordError"></small>
+                    </div>
+
+                    <!-- Address -->
+                    <div class="form-group">
+                        <label for="Address" class="font-weight-bold">Address</label>
+                        <input type="text" name="Address" id="Address" class="form-control form-control-lg" placeholder="Enter School Address" required>
+                    </div>
+
+
+                    <!-- Submit Button -->
+                    <div class="form-group text-center">
+                        <input class="btn btn-info btn-lg px-5 py-3" type="submit" value="Submit">
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Set the background image */
+        body {
+            background-image: url("{% static 'images/students_registration.jpg' %}");
+            background-size: cover;
+            background-position: center center;
+            background-attachment: fixed;
+        }
+    </style>
+
+    <script>
+        document.getElementById('schoolRegistrationForm').addEventListener('submit', function(event) {
+            let isValid = true;
+
+            // Field values
+            const schoolName = document.getElementById('school_name').value;
+            const schoolId = document.getElementById('school_id').value;
+            const password = document.getElementById('password').value;
+
+            // Regular expressions
+            const nameRegex = /^[A-Za-z\s]+$/;
+            const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+            // Clear previous errors
+            document.querySelectorAll('.text-danger').forEach(el => el.textContent = '');
+
+            // Validation
+            if (!nameRegex.test(schoolName)) {
+                document.getElementById('schoolNameError').textContent = 'School name must contain only alphabets and spaces.';
+                isValid = false;
+            }
+
+            if (!schoolId) {
+                document.getElementById('schoolIdError').textContent = 'School ID must be numeric.';
+                isValid = false;
+            }
+
+            if (!passwordRegex.test(password)) {
+                document.getElementById('passwordError').textContent = 'Password must be at least 8 characters, contain 1 uppercase letter, 1 number, and 1 special character.';
+                isValid = false;
+            }
+
+            if (!isValid) {
+                event.preventDefault();
+            }
+        });
+    </script>
+
+{% endblock %}

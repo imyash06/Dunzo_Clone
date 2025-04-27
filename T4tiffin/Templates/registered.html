@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% block title %}Registered - T4tiffin{% endblock %}
+{% load static  %}}
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="text-center">Standards</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        {% for standard in standards %}
+                            <li class="list-group-item list-group-item-action">
+                                <a href="?standard_id={{ standard }}" class="text-decoration-none text-dark btn btn-sm w-100">{{ standard }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Student Details -->
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h4 class="text-center">Students</h4>
+                </div>
+                <div class="card-body">
+                    {% if students %}
+                        <table class="table table-bordered table-hover">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Student Name</th>
+                                    <th>Parent Name</th>
+                                    <th>Parent Phone</th>
+                                    <th>Address</th>
+                                    <th>Division</th>
+                                    <th>Roll No</th>
+                                    <th>Password</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for student in students %}
+                                    <tr>
+                                        <td>{{ student.username }}</td>
+                                        <td>{{ student.student_name }}</td>
+                                        <td>{{ student.parent_name }}</td>
+                                        <td>{{ student.parent_phone }}</td>
+                                        <td>{{ student.address }}</td>
+                                        <td>{{ student.division }}</td>
+                                        <td>{{ student.roll_no }}</td>
+                                        <td>{{ student.actual_password }}</td>
+                                        <td>
+                                            <!-- Download Button -->
+                                            <a href="{% url 'view_student' student.id %}" class="btn btn-sm btn-info">
+                                                View QR
+                                            </a>
+                                            
+                                            <!-- Delete Button -->
+                                            <form action="{% url 'delete_student' student.id %}" method="POST" class="d-inline">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this student?');">
+                                                    Delete
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <div class="alert alert-info text-center" role="alert">
+                            No students available for this standard.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Go to Home Button -->
+    <div class="text-center mt-4">
+        <a href="/home" class="btn btn-primary btn-lg">Go to Dashboard</a>
+    </div>
+</div>
+
+<style>
+    /* Set the background image */
+    body {
+        background-image: url("{% static 'images/registered.jpg' %}");
+        background-size: cover;
+        background-position: center center;
+        background-attachment: fixed;
+    }
+</style>
+
+{% endblock %}

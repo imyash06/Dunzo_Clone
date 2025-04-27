@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Success</title>
+</head>
+<body>
+    <h2>Signup Successful!</h2>
+    <p>Username: {{ student.username }}</p>
+    <p>student_name: {{ student.student_name }}</p>
+    <p>parent_name: {{ student.parent_name }}</p>
+    <p>standard: {{ student.standard }}</p>
+    <p>division: {{ student.division }}</p>
+    <p>address: {{ student.address }}</p>
+
+    {% if user.qr_code %}
+        <img src="{{ student.qr_code.url }}" alt="QR Code">
+    {% else %}
+        <p>No QR code generated</p>
+    {% endif %}
+</body>
+</html>
